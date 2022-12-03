@@ -19,6 +19,18 @@ const Card = styled(Animated.createAnimatedComponent(View))`
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
   position: absolute;
 `;
+const Btn = styled.TouchableOpacity`
+  margin: 0px 10px;
+`;
+const BtnContainer = styled.View`
+  flex-direction: row;
+  flex: 1;
+`;
+const CardContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  flex: 3;
+`;
 export default function App() {
   const scale = useRef(new Animated.Value(1)).current;
   const panResponder = useRef(
@@ -73,21 +85,44 @@ export default function App() {
     restDisplacementThreshold: 100,
     restSpeedThreshold: 100,
   });
-
+  const closePress = () => {
+    goLeft.start();
+  };
+  const checkPress = () => {
+    goRight.start();
+  };
+  const secondScale = position.interpolate({
+    inputRange: [-300, 0, 300],
+    outputRange: [1, 0.7, 1],
+    extrapolate: "clamp",
+  });
   return (
     <Container>
-      <Card
-        {...panResponder.panHandlers}
-        style={{
-          transform: [
-            { scale },
-            { translateX: position },
-            { rotateZ: rotation },
-          ],
-        }}
-      >
-        <Ionicons name="pizza" color="#192a56" size={98} />
-      </Card>
+      <CardContainer>
+        <Card style={{ transform: [{ scale: secondScale }] }}>
+          <Ionicons name="beer" color="#192a56" size={98} />
+        </Card>
+        <Card
+          {...panResponder.panHandlers}
+          style={{
+            transform: [
+              { scale },
+              { translateX: position },
+              { rotateZ: rotation },
+            ],
+          }}
+        >
+          <Ionicons name="pizza" color="#192a56" size={98} />
+        </Card>
+      </CardContainer>
+      <BtnContainer>
+        <Btn onPress={closePress}>
+          <Ionicons name="close-circle" color="white" size={58} />
+        </Btn>
+        <Btn onPress={checkPress}>
+          <Ionicons name="checkmark-circle" color="white" size={58} />
+        </Btn>
+      </BtnContainer>
     </Container>
   );
 }
